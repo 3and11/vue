@@ -1,0 +1,64 @@
+ 如何使用Vue？
+1 在html文件中引入<script src="https://unpkg.com/vue@3"></script>
+  就可以在js文件中进行使用Vue框架中的内容
+2 如何使用VueDevTools
+  1 在浏览器中引入VueDevTools拓展，调试工具栏中会有Vue调试选项
+3 使用Vue
+  Vue.createApp({}).mount("#app");
+  <div id="app">
+      <p>Hey</p>
+      <p>姓名：{{name}}</p>
+      <p>年龄：{{age}}</p>
+      <p>电话号码：{{phoneNumber}}</p>
+    </div>
+使用“{{}}”最为占位符用于渲染返回的元素属性，可以mount（“类选择器”）等
+注意：在使用类选择器，如果一个类中有多个元素，Vue只选择第一个元素进行渲染
+`   <div class="app">
+      <p>Hey</p>
+      <p>姓名：{{name}}</p>
+      <p>年龄：{{age}}</p>
+      <p>电话号码：{{phoneNumber}}</p>
+    </div>
+    <div class="app">
+      <p>Hey</p>
+      <p>姓名：{{name}}</p>
+      <p>年龄：{{age}}</p>
+      <p>电话号码：{{phoneNumber}}</p>
+    </div>`
+可以使用js从后台改变Vue对象返回值
+  const wang = Vue.createApp({
+    data() {
+      return {
+        name: "王",
+        age: 10,
+        phoneNumber: 12345567,
+      };
+    },
+  }).mount(".app");
+  setTimeout(() => {
+    wang.name = "薇薇";
+  }, 2000);
+在创建Vue对象后，会将返回对象的属性复制到 `wang.$data.name` 等类似的属性当中
+为了简化开发方式，Vue会自动代理的设置获取该对象的getter和setter方法
+4.如何在{{}}中使用函数方法
+  示例 `<p>姓名：{{`${name.toUpperCase()}`}}</p>  `
+  在Vue对象中定义函数方法
+   methods: {
+    add() {
+        return this.age + this.phoneNumber;
+      },
+    },
+  直接使用{{add()}}即可调用该方法
+tip:设置数据未加载之前的格式
+  `v-cloak` 在html的标签属性上加上该元素
+  在css中设置该属性标签的表现方式，表现方式会在Vue加载进完成之后自动清除
+  例如： 
+    [v-cloak] {
+            display: none;
+          }
+  会在Vue未加载完成之前将元素隐藏，待其加载完成之后返回源标签样式
+
+
+
+
+
