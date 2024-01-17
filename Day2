@@ -1,0 +1,72 @@
+1 v-model 的数据绑定从而进行响应式编程，使静态页面中的数据会随着input中数据的改变而改变
+  方法：<input type="text" v-model="phoneNumber" /> 使用 v-model绑定创建的Vue返回的phoneNumber对象
+        更改input中的数据，静态页面上的phonenumber也变化
+2 使用v-bind绑定url实现动态url效果
+  <p><a v-bind:href="url" target="_blank">baidu</a></p>
+  <p><a :href="url" target="_blank">baidu</a></p>
+3 输入原始模板的HTML
+    row_url: '<a href="www.baidu.com" target="_blank">baidu</a>',
+    <p v-html="row_url"></p>
+    通过v-html将row_url以html的形式进行渲染
+
+And this is the difference between v-bind and v-model:
+`So v-model is a two-way binding for form inputs. It combines v-bind, which brings a js value 
+ into the markup and v-on:input to update the js value. The js value must be present in your 
+ data, or in an inject. form stackoverflow "https://stackoverflow.com/questions/42260233/difference-between-v-model-and-v-bind-on-vue-js"
+
+Use v-model when you can. Use v-bind/v-on when you must :-) I hope your answer was accepted.`
+4 通过v-on:click \ @:click 进行事件绑定
+    <button @:click="increment">增加</button>
+    <button @:click="decrement">减少</button>
+
+     increment() {
+      this.age++;
+    },
+    decrement() {
+      this.age--;
+    },
+5 为事件传输数据
+  <button @:click="increment('年龄增加了一岁',$event)">增加</button>
+  
+  increment(message, event) {
+      event.preventDefault();
+      console.log(message);
+      this.age++;
+    }
+  将会把 `年龄增加了一岁`传递给message，而使用$event传递默认的event
+  其中 event.preventDefault()方法的主要作用是取消事件的默认行为。当用户点击一个提交按钮时
+  浏览器的默认行为是提交表单中的数据，此外还能防止打开一个新的url
+  注意：$event在不需要使用event对象时可以不进行传递。
+  使用Vue-modifier 能够简化代码
+   <button @:click.prevent="increment('年龄增加了一岁',$event)">增加</button> 
+  Vue会在后台自动preventDeault（）
+  还包含以下方法
+  .stop     阻止事件的进一步传播和默认行为。通常用于阻止事件冒泡和默认行为
+  .prevent  阻止事件的默认行为。通常与事件对象一起使用，如event.preventDefault()。
+  .capture  在捕获阶段处理事件。与addEventListener方法的第三个参数一起使用，值为true表示在捕获阶段处理事件。
+  .self     只处理当前元素上的事件。与addEventListener方法的第三个参数一起使用，值为true表示只处理当前元素上的事件。
+  .once     只执行一次事件处理程序。与addEventListener方法的第三个参数一起使用，值为true表示只执行一次事件处理程序。
+  .passive  设置为true时，表示事件监听器在调用时不会阻止默认行为。这可以提高性能，但可能会导致某些功能无法正常工作。
+  v-model中的修饰符
+  .trim     移除input输入框中的多余空格，只保留一个
+  .lazy     懒加载，需要等数据输入完成之后才会对 v-model 绑定的数据进行更新
+  .number   将input的类型都限制为number类型，并且在重新读取绑定数据时仍会将string类型转为number
+6 computed properties ：使用该类型能够进行计算并且返回一个数据类型而不是函数，当你对其中的属性进行v-model进行双向绑定时
+当数据中的元素发生变化时，得出的结果会自动发生变化。但是，当改变其他元素时将不会点用这个方法重新产生新的结果。适当的应用可以
+提高性能。
+例： 
+computed: {
+    combine() {
+      console.log("name has been combined by computer properties");
+      return this.firstName + this.lastName.toUpperCase();
+    },
+  },
+并且computed property "combine" is readonly 当进行对运算结果的module绑定时，只能将数据回显到输入框中，不能够修改该数据
+7 watcher 对指定数据进行观察，当数据放生改变时将会调用watcher定义的方法函数可以对数据进行更改。并且watcher定义的是异步函数
+可以在后台运行。
+例：  watch: {
+        age(oldVal, newVal) {
+          if (newVal == 25) this.age = 511;
+          console.log("你已经" + oldVal + "岁了");
+        },
+      },
